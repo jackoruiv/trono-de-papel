@@ -1,1 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>👑 TRONO DE PAPEL</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#14101f;color:#eee;font-family:system-ui;padding:12px;text-align:center}
+h1{margin:6px 0;font-size:26px}.card{background:#1f1833;border:2px solid #e8b64c;border-radius:14px;padding:14px;margin:8px 0}
+button{background:#e8b64c;color:#111;border:0;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer;margin:4px;width:100%}
+button.sec{background:#2a3446;color:#fff}button:disabled{opacity:.4}
+.mao{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.carta{background:#fff;color:#111;border-radius:12px;padding:12px;width:110px;min-height:130px;cursor:pointer;border:3px solid #ccc}
+.carta.sel{border-color:#e8b64c;transform:translateY(-6px)}
+.vida{font-size:20px;font-weight:800}.log{background:#0a0f16;border-radius:10px;padding:10px;text-align:left;max-height:160px;overflow-y:auto;font-size:13px}
+input{padding:10px;border-radius:8px;border:0;width:90%;margin:4px}
+#onlineBox{background:#f1f8e9;color:#111;border-radius:12px;padding:12px;margin:10px 0}
+</style>
+</head>
+<body>
+<h1>👑 TRONO DE PAPEL</h1>
+<p>Você x Adversário • 20 de vida • Quem zerar, perde</p>
 
+<div id="menu">
+  <div class="card">
+    <b>🌐 ONLINE - 2 Celulares</b><br>
+    <span id="onlineStatus" style="color:red;font-weight:800">Desconectado</span><br>
+    <input id="inputNome" value="Rei" placeholder="Seu nome"><br>
+    <input id="inputSala" placeholder="Código da sala, ex: TRONO-1234"><br>
+    <button onclick="criarSala()">Criar Sala</button>
+    <button class="sec" onclick="entrarSala()">Entrar na Sala</button>
+    <button id="btnComecar" onclick="comecarOnline()" style="display:none;background:#ff8f00">👑 COMEÇAR PARTIDA</button>
+    <div id="onlineLog" style="font-size:12px"></div>
+  </div>
+  <button onclick="jogarBot()">🎮 JOGAR SOZINHO (contra Bot)</button>
+</div>
+
+<div id="jogo" style="display:none">
+  <div class="card"><span id="nomeAdv">🤖 Adversário</span><br><span class="vida">❤️ <span id="vidaAdv">20</span></span><br><span id="maoAdvInfo">🃏 Mão: 3</span></div>
+  <div id="turnoInfo" style="font-weight:800;color:#ffe27a;margin:8px">Seu turno!</div>
+  <div class="card"><span id="nomeEu">🫵 Você</span><br><span class="vida">❤️ <span id="vidaEu">20</span></span><br>Rodada: <span id="rodada">1</span></div>
+  <p><b>SUA MÃO - Toque numa carta e depois em JOGAR</b></p>
+  <div class="mao" id="mao"></div>
+  <button onclick="jogarCarta()">▶️ JOGAR CARTA SELECIONADA</button>
+  <button class="sec" onclick="passarTurno()">⏭️ Passar turno</button>
+  <div class="card"><b>📜 Log</b><div class="log" id="log"></div></div>
+  <button class="sec" onclick="location.reload()">🏠 Voltar ao menu</button>
+</div>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+let peer=null, conn=null, souHost=false, online=false;
+let meuNome="Rei", nomeAdv="Adversário", minhaVez=false, souJogador1=true;
+let vidaEu=20, vidaAdv=20, rodada=1, mao=[], maoAdvCount=3, sel=-1, deck=[];
+let escudoEu=false, escudoAdv=false;
+
+let CARTAS=[
+ {nome:"🗡️ Espada", desc:"Tira 3 de vida", tipo:"atk", val:3},
+ {nome:"🛡️ Muralha", desc:"Bloqueia próximo ataque", tipo:"def", val:0},
+ {nome:"🔥 Fogo", desc:"Tira 4, mas você perde 1", tipo:"atk", val:4},
+ {nome:"💰 Tesouro", desc:"+4 de vida", tipo:"cura", val:4},
+ {nome:"🕵️ Espião", desc:"Vê 1 carta do outro", tipo:"espiao", val:0},
+ {nome:"⚡ Raio", desc:"Tira 2, ignora muralha", tipo:"atk", val:2},
+];
+function embaralhar(a){ for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+function novaMao(){ let d=[]; for(let i=0;i<3;i++) d.push(CARTAS[Math.floor(Math.random()*CARTAS.length)]); return d; }
+function log(t){ let e=document.getElementById('log'); e.innerHTML="<div>> "+t+"</div>"+e.innerHTML; }
+function atualizar(){
+  document.getElementById('vidaEu').textContent=vidaEu;
+  document.getElementById('vidaAdv').textContent=vidaAdv;
+  document.getElementById('rodada').textContent=rodada;
+  document.getElementById('maoAdvInfo').textContent="🃏 Mão: "+maoAdvCount+(escudoAdv?" • 🛡️ Muralha":"");
+  document.getElementById('nomeEu').textContent="🫵 "+meuNome+(escudoEu?" • 🛡️":"");
+  document.getElementById('nomeAdv').textContent="👑 "+nomeAdv;
+  document.getElementById('turnoInfo').textContent = minhaVez ? "✅ SEU TURNO - Jogue!" : "⏳ Turno de "+nomeAdv+"...";
+  let m=document.getElementById('mao'); m.innerHTML="";
+  mao.forEach((c,i)=>{ let d=document.createElement('div'); d.className='carta'+(sel===i?' sel':''); d.innerHTML="<b>"+c.nome+"</b><br><small>"+c.desc+"</small>"; d.onclick=()=>{ sel=i; atualizar(); }; m.appendChild(d); });
+}
+function comprar(){ if(mao.length<5) mao.push(CARTAS[Math.floor(Math.random()*CARTAS.length)]); }
+function jogarBot(){
+  online=false; meuNome=document.getElementById('inputNome').value||"Você"; nomeAdv="Bot 🤖";
+  vidaEu=20; vidaAdv=20; rodada=1; mao=novaMao(); minhaVez=true;
+  document.getElementById('menu').style.display='none'; document.getElementById('jogo').style.display='block';
+  log("Partida começou! Você começa."); atualizar();
+}
+function aplicarCarta(c, quem){
+  let atacante = quem==='eu' ? meuNome : nomeAdv;
+  if(c.tipo==='atk'){
+    let ignora = c.nome.includes("Raio");
+    if(quem==='eu'){
+      if(escudoAdv && !ignora){ escudoAdv=false; log("🛡️ Muralha de "+nomeAdv+" bloqueou!"); }
+      else { vidaAdv-=c.val; log(atacante+" usou "+c.nome+" -"+c.val+" vida!"); if(c.nome.includes("Fogo")){ vidaEu-=1; log("🔥 Você perdeu 1 por usar Fogo"); } }
+    } else {
+      if(escudoEu && !ignora){ escudoEu=false; log("🛡️ Sua Muralha bloqueou!"); }
+      else { vidaEu-=c.val; log(atacante+" usou "+c.nome+" -"+c.val+" vida!"); }
+    }
+  }
+  if(c.tipo==='def'){ if(quem==='eu') escudoEu=true; else escudoAdv=true; log(atacante+" levantou 🛡️ Muralha!"); }
+  if(c.tipo==='cura'){ if(quem==='eu'){ vidaEu=Math.min(20,vidaEu+c.val); log(atacante+" curou +"+c.val); } else { vidaAdv=Math.min(20,vidaAdv+c.val); log(atacante+" curou +"+c.val); } }
+  if(c.tipo==='espiao'){ log(atacante+" usou 🕵️ Espião e espiou a mão!"); }
+  checarFim();
+}
+function checarFim(){
+  if(vidaEu<=0){ log("💀 Você perdeu!"); alert("Você perdeu! "+nomeAdv+" venceu!"); minhaVez=false; }
+  if(vidaAdv<=0){ log("🏆 Você venceu!"); alert("VOCÊ VENCEU! 👑"); minhaVez=false; }
+  atualizar();
+}
+function jogarCarta(){
+  if(!minhaVez){ alert("Não é seu turno!"); return; }
+  if(sel<0){ alert("Escolhe uma carta primeiro!"); return; }
+  let c=mao.splice(sel,1)[0]; sel=-1;
+  aplicarCarta(c,'eu'); comprar(); maoAdvCount=mao.length;
+  if(online && conn) conn.send({tipo:'jogada', carta:c, vidaEu:vidaEu, vidaAdv:vidaAdv, escudoEu:escudoEu, escudoAdv:escudoAdv});
+  minhaVez=false; rodada++; atualizar();
+  if(!online) setTimeout(turnoBot, 800);
+}
+function passarTurno(){
+  if(!minhaVez) return; minhaVez=false; comprar(); atualizar();
+  if(online && conn) conn.send({tipo:'passou', vidaEu:vidaEu, vidaAdv:vidaAdv});
+  if(!online) setTimeout(turnoBot, 800);
+}
+function turnoBot(){
+  if(vidaEu<=0||vidaAdv<=0) return;
+  let c=CARTAS[Math.floor(Math.random()*CARTAS.length)];
+  // Bot burro: se vida baixa, cura, senão ataca
+  if(vidaAdv<8) c=CARTAS[3];
+  aplicarCarta(c,'bot');
+  comprar(); minhaVez=true; rodada++; log("Sua vez!"); atualizar();
+}
+// ONLINE - Host manda tudo, guest só obedece
+function criarSala(){
+  meuNome=document.getElementById('inputNome').value||"Rei";
+  let codigo="TRONO-"+Math.floor(1000+Math.random()*9000);
+  document.getElementById('inputSala').value=codigo; souHost=true;
+  if(peer) peer.destroy(); peer=new Peer(codigo);
+  peer.on('open',()=>{ setStatus("Sala: "+codigo+" - esperando...", "orange"); document.getElementById('btnComecar').style.display='block'; });
+  peer.on('connection',c=>{ conn=c; setupConn(); });
+  peer.on('error',e=>alert("Erro: "+e.type));
+}
+function entrarSala(){
+  meuNome=document.getElementById('inputNome').value||"Rainha";
+  let codigo=document.getElementById('inputSala').value.trim(); if(!codigo){alert("Digita o código!");return;}
+  souHost=false; if(peer) peer.destroy(); peer=new Peer();
+  peer.on('open',()=>{ conn=peer.connect(codigo,{reliable:true}); setupConn(); setStatus("Conectando...","orange"); });
+}
+function setupConn(){
+  conn.on('open',()=>{
+    online=true; setStatus("✅ Conectado!","green");
+    conn.send({tipo:'ola', nome:meuNome});
+  });
+  conn.on('data',d=>{
+    if(d.tipo==='ola'){ nomeAdv=d.nome; log("Conectado com "+d.nome); }
+    if(d.tipo==='inicio'){
+      // Guest NÃO cria jogo, recebe do Host
+      online=true; souJogador1=false; nomeAdv=d.hostNome;
+      vidaEu=d.vidaGuest; vidaAdv=d.vidaHost; mao=d.maoGuest; maoAdvCount=d.maoHostCount; minhaVez=false;
+      document.getElementById('menu').style.display='none'; document.getElementById('jogo').style.display='block';
+      log("Partida começou! "+d.hostNome+" começa. Aguarde..."); atualizar();
+    }
+    if(d.tipo==='jogada'){
+      // O outro jogou, aplica no seu jogo
+      aplicarCarta(d.carta,'bot');
+      vidaEu=d.vidaAdv; vidaAdv=d.vidaEu; // inverte porque a visão é espelhada
+      escudoEu=d.escudoAdv; escudoAdv=d.escudoEu;
+      maoAdvCount=3; minhaVez=true; rodada++;
+      log("Sua vez!"); atualizar();
+    }
+    if(d.tipo==='passou'){ minhaVez=true; log(nomeAdv+" passou. Sua vez!"); atualizar(); }
+  });
+}
+function comecarOnline(){
+  if(!online && !conn){ alert("Espera o outro conectar!"); return; }
+  if(!souHost){ alert("Só quem criou começa!"); return; }
+  vidaEu=20; vidaAdv=20; rodada=1; mao=novaMao(); let maoGuest=novaMao();
+  minhaVez=true; souJogador1=true;
+  document.getElementById('menu').style.display='none'; document.getElementById('jogo').style.display='block';
+  log("Você começa!"); atualizar();
+  conn.send({tipo:'inicio', hostNome:meuNome, vidaHost:20, vidaGuest:20, maoGuest:maoGuest, maoHostCount:3});
+}
+function setStatus(t,c){ let e=document.getElementById('onlineStatus'); e.textContent=t; e.style.color=c; }
+</script>
+</body>
+</html>
