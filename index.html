@@ -2,182 +2,222 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>👑 TRONO DE PAPEL</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>👑 TRONO DE PAPEL V2</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#14101f;color:#eee;font-family:system-ui;padding:12px;text-align:center}
-h1{margin:6px 0;font-size:26px}.card{background:#1f1833;border:2px solid #e8b64c;border-radius:14px;padding:14px;margin:8px 0}
-button{background:#e8b64c;color:#111;border:0;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer;margin:4px;width:100%}
-button.sec{background:#2a3446;color:#fff}button:disabled{opacity:.4}
-.mao{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.carta{background:#fff;color:#111;border-radius:12px;padding:12px;width:110px;min-height:130px;cursor:pointer;border:3px solid #ccc}
-.carta.sel{border-color:#e8b64c;transform:translateY(-6px)}
-.vida{font-size:20px;font-weight:800}.log{background:#0a0f16;border-radius:10px;padding:10px;text-align:left;max-height:160px;overflow-y:auto;font-size:13px}
-input{padding:10px;border-radius:8px;border:0;width:90%;margin:4px}
-#onlineBox{background:#f1f8e9;color:#111;border-radius:12px;padding:12px;margin:10px 0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:radial-gradient(ellipse at top,#2b1d4a 0%,#120e22 60%,#070510 100%);color:#fff;font-family:system-ui;padding:10px;min-height:100vh}
+.top{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.4);border:1px solid #e8b64c55;border-radius:14px;padding:10px 12px}
+.top b{font-size:15px}
+.logo{text-align:center;font-size:30px;font-weight:900;letter-spacing:1px;margin:10px 0 2px;text-shadow:0 0 20px #e8b64c}
+.sub{text-align:center;color:#cbb;font-size:12px;margin-bottom:10px}
+.card{background:linear-gradient(180deg,#241a3d,#17122b);border:1px solid #ffffff22;border-radius:16px;padding:12px;margin:8px 0;box-shadow:0 10px 30px #0008}
+.player{display:flex;gap:10px;align-items:center}
+.avatar{width:48px;height:48px;border-radius:50%;background:#e8b64c;display:grid;place-items:center;font-size:26px;color:#111;flex-shrink:0}
+.bar{height:12px;background:#0008;border-radius:20px;overflow:hidden;margin:4px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#ff3b3b,#ff7a3b);transition:.4s}
+.bar.e i{background:linear-gradient(90deg,#00d2ff,#0077ff)}
+.pill{display:inline-block;background:#ffffff14;border:1px solid #ffffff22;padding:4px 8px;border-radius:20px;font-size:11px;margin:2px}
+button{background:linear-gradient(180deg,#ffd166,#e8a81c);color:#111;border:0;border-radius:12px;padding:13px;font-weight:900;cursor:pointer;width:100%;margin:4px 0;font-size:15px;box-shadow:0 4px 0 #9a6a00}
+button.sec{background:#2e2a4d;color:#fff;box-shadow:0 4px 0 #000}
+button:disabled{opacity:.35}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #ffffff33;background:#0f0a22;color:#fff;margin:5px 0}
+.mao{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.carta{background:linear-gradient(180deg,#fff,#e8e0ff);color:#111;border-radius:14px;padding:10px;min-height:148px;cursor:pointer;border:3px solid transparent;position:relative;overflow:hidden}
+.carta.sel{border-color:#ffd166;transform:translateY(-6px) scale(1.02);box-shadow:0 0 0 3px #ffd16655,0 10px 20px #000}
+.carta.rara{background:linear-gradient(180deg,#d6f0ff,#a8d8ff)}
+.carta.lend{background:linear-gradient(180deg,#ffe9a8,#ffc44d)}
+.custo{position:absolute;top:6px;right:6px;background:#0077ff;color:#fff;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:13px}
+.tipo{font-size:10px;letter-spacing:1px;font-weight:900;color:#6a4cff}
+.nome{font-weight:900;font-size:14px;line-height:1.1;margin:4px 0}
+.desc{font-size:11px;line-height:1.2;color:#333}
+.rar{font-size:10px;margin-top:6px;opacity:.7}
+.log{background:#0006;border-radius:10px;padding:10px;text-align:left;max-height:150px;overflow-y:auto;font-size:12.5px;line-height:1.4}
+.log div{padding:3px 0;border-bottom:1px solid #ffffff11}
+.efeito{animation:pop .35s}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.turno{text-align:center;font-weight:900;color:#ffd166;margin:6px}
+.online{background:#fff;color:#111;border-radius:16px;padding:14px}
+.badge{background:#ff3b3b;color:#fff;padding:2px 7px;border-radius:20px;font-size:11px}
+.badge.on{background:#22c55e}
 </style>
 </head>
 <body>
-<h1>👑 TRONO DE PAPEL</h1>
-<p>Você x Adversário • 20 de vida • Quem zerar, perde</p>
+<div class="logo">👑 TRONO DE PAPEL</div>
+<div class="sub">V2 • 18 Cartas • Energia • Veneno • Roubo • Lendárias</div>
 
 <div id="menu">
-  <div class="card">
-    <b>🌐 ONLINE - 2 Celulares</b><br>
-    <span id="onlineStatus" style="color:red;font-weight:800">Desconectado</span><br>
-    <input id="inputNome" value="Rei" placeholder="Seu nome"><br>
-    <input id="inputSala" placeholder="Código da sala, ex: TRONO-1234"><br>
-    <button onclick="criarSala()">Criar Sala</button>
+  <div class="online">
+    <b>🌐 ONLINE - 2 Celulares</b> <span id="onlineStatus" class="badge">Desconectado</span><br>
+    <input id="inputNome" value="Rei" placeholder="Seu nome">
+    <input id="inputSala" placeholder="Código da sala ex: TRONO-1234">
+    <button onclick="criarSala()">＋ Criar Sala</button>
     <button class="sec" onclick="entrarSala()">Entrar na Sala</button>
-    <button id="btnComecar" onclick="comecarOnline()" style="display:none;background:#ff8f00">👑 COMEÇAR PARTIDA</button>
+    <button id="btnComecar" onclick="comecarOnline()" style="display:none;background:#ff8f00;color:#fff">👑 COMEÇAR PARTIDA</button>
     <div id="onlineLog" style="font-size:12px"></div>
   </div>
-  <button onclick="jogarBot()">🎮 JOGAR SOZINHO (contra Bot)</button>
+  <button onclick="jogarBot()">🎮 JOGAR SOZINHO vs BOT</button>
+  <div class="card"><b>📖 Como joga:</b><br>• Começa com 30 de vida e 2 de energia<br>• Todo turno ganha +1 energia e +1 carta<br>• Carta custa energia. Carta Lendária é forte mas cara!<br>• Veneno tira 2 por 2 turnos. Roubo rouba vida do outro.</div>
 </div>
 
 <div id="jogo" style="display:none">
-  <div class="card"><span id="nomeAdv">🤖 Adversário</span><br><span class="vida">❤️ <span id="vidaAdv">20</span></span><br><span id="maoAdvInfo">🃏 Mão: 3</span></div>
-  <div id="turnoInfo" style="font-weight:800;color:#ffe27a;margin:8px">Seu turno!</div>
-  <div class="card"><span id="nomeEu">🫵 Você</span><br><span class="vida">❤️ <span id="vidaEu">20</span></span><br>Rodada: <span id="rodada">1</span></div>
-  <p><b>SUA MÃO - Toque numa carta e depois em JOGAR</b></p>
+  <div class="top"><span>Rodada <b id="rodada">1</b></span><span id="turnoInfo">Seu turno</span><button style="width:auto;padding:6px 10px;margin:0" class="sec" onclick="location.reload()">🏠</button></div>
+
+  <div class="card"><div class="player"><div class="avatar" id="avaAdv">👑</div><div style="flex:1;text-align:left"><b id="nomeAdv">Adversário</b><div class="bar"><i id="barAdv" style="width:100%"></i></div><span>❤️ <b id="vidaAdv">30</b>/30</span> <span class="pill" id="escAdv"></span> <span class="pill" id="venAdv"></span><br><span style="font-size:12px;opacity:.8" id="maoAdvInfo">🃏 Mão: 3</span></div></div></div>
+
+  <div class="card"><div class="player"><div class="avatar" style="background:#00d2ff">🫵</div><div style="flex:1;text-align:left"><b id="nomeEu">Você</b><div class="bar"><i id="barEu" style="width:100%"></i></div><span>❤️ <b id="vidaEu">30</b>/30</span> <span class="pill" id="escEu"></span> <span class="pill" id="venEu"></span><br><div class="bar e"><i id="barEnergia" style="width:40%"></i></div><span>⚡ Energia: <b id="energia">2</b>/10</span></div></div></div>
+
+  <div class="turno" id="acaoInfo">Escolha uma carta 👇</div>
   <div class="mao" id="mao"></div>
-  <button onclick="jogarCarta()">▶️ JOGAR CARTA SELECIONADA</button>
-  <button class="sec" onclick="passarTurno()">⏭️ Passar turno</button>
-  <div class="card"><b>📜 Log</b><div class="log" id="log"></div></div>
-  <button class="sec" onclick="location.reload()">🏠 Voltar ao menu</button>
+  <div style="display:flex;gap:8px"><button onclick="jogarCarta()" style="flex:2">▶️ JOGAR CARTA</button><button class="sec" onclick="passarTurno()" style="flex:1">⏭️ Passar</button></div>
+
+  <div class="card"><b>📜 Batalha</b><div class="log" id="log"></div></div>
 </div>
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
-let peer=null, conn=null, souHost=false, online=false;
-let meuNome="Rei", nomeAdv="Adversário", minhaVez=false, souJogador1=true;
-let vidaEu=20, vidaAdv=20, rodada=1, mao=[], maoAdvCount=3, sel=-1, deck=[];
-let escudoEu=false, escudoAdv=false;
+let peer=null,conn=null,souHost=false,online=false,minhaVez=false;
+let meuNome="Rei",nomeAdv="Bot",vidaEu=30,vidaAdv=30,energia=2,rodada=1,mao=[],sel=-1;
+let escEu=0,escAdv=0,venEu=0,venAdv=0,venEuTurno=0,venAdvTurno=0;
 
-let CARTAS=[
- {nome:"🗡️ Espada", desc:"Tira 3 de vida", tipo:"atk", val:3},
- {nome:"🛡️ Muralha", desc:"Bloqueia próximo ataque", tipo:"def", val:0},
- {nome:"🔥 Fogo", desc:"Tira 4, mas você perde 1", tipo:"atk", val:4},
- {nome:"💰 Tesouro", desc:"+4 de vida", tipo:"cura", val:4},
- {nome:"🕵️ Espião", desc:"Vê 1 carta do outro", tipo:"espiao", val:0},
- {nome:"⚡ Raio", desc:"Tira 2, ignora muralha", tipo:"atk", val:2},
+const CARTAS=[
+{n:"🗡️ Espada",t:"ATAQUE",d:"Tira 3 de vida",c:1,rar:"Comum",tipo:"atk",v:3},
+{n:"🛡️ Muralha",t:"DEFESA",d:"Ganha 5 de escudo",c:1,rar:"Comum",tipo:"def",v:5},
+{n:"💰 Tesouro",t:"CURA",d:"+5 vida",c:2,rar:"Comum",tipo:"cura",v:5},
+{n:"🏹 Flecha",t:"ATAQUE",d:"Tira 2, ignora escudo",c:2,rar:"Comum",tipo:"atkIgnora",v:2},
+{n:"🧪 Veneno",t:"VENENO",d:"Veneno: -2 por 2 turnos",c:2,rar:"Comum",tipo:"veneno",v:2},
+{n:"⚡ Raio",t:"ATAQUE",d:"Tira 4",c:3,rar:"Comum",tipo:"atk",v:4},
+{n:"🕵️ Espião",t:"SUPORTE",d:"Rouba 1 carta e ganha +1 energia",c:2,rar:"Comum",tipo:"espiao",v:0},
+{n:"🧛 Vampiro",t:"ROUBO",d:"Rouba 3 vida do outro",c:3,rar:"Rara",tipo:"roubo",v:3},
+{n:"🔥 Fogo Infernal",t:"ATAQUE",d:"Tira 6, você perde 2",c:4,rar:"Rara",tipo:"atk",v:6},
+{n:"🏰 Fortaleza",t:"DEFESA",d:"Ganha 10 de escudo + 2 vida",c:3,rar:"Rara",tipo:"fort",v:10},
+{n:"💎 Diamante",t:"CURA",d:"+10 vida",c:4,rar:"Rara",tipo:"cura",v:10},
+{n:"🌀 Portal",t:"SUPORTE",d:"Troca 1 carta por 2 novas",c:1,rar:"Rara",tipo:"portal",v:0},
+{n:"🐉 Dragão",t:"LENDÁRIA",d:"Tira 10! Custo alto",c:6,rar:"Lendária",tipo:"atk",v:10},
+{n:"👑 Rei Sombrio",t:"LENDÁRIA",d:"Rouba 8 vida e ganha escudo 5",c:6,rar:"Lendária",tipo:"rei",v:8},
+{n:"☄️ Meteoro",t:"LENDÁRIA",d:"Tira 7 de todos (inclui você)",c:5,rar:"Lendária",tipo:"meteoro",v:7},
+{n:"🧙 Mago Supremo",t:"LENDÁRIA",d:"Cura tudo + ganha 3 energia",c:5,rar:"Lendária",tipo:"mago",v:0},
+{n:"⚔️ Lâmina Dupla",t:"ATAQUE",d:"Ataca 2x de 3",c:4,rar:"Rara",tipo:"duplo",v:3},
+{n:"🪞 Espelho",t:"DEFESA",d:"Reflete o próximo ataque",c:3,rar:"Rara",tipo:"espelho",v:0},
 ];
-function embaralhar(a){ for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
-function novaMao(){ let d=[]; for(let i=0;i<3;i++) d.push(CARTAS[Math.floor(Math.random()*CARTAS.length)]); return d; }
-function log(t){ let e=document.getElementById('log'); e.innerHTML="<div>> "+t+"</div>"+e.innerHTML; }
+function randCarta(){ return JSON.parse(JSON.stringify(CARTAS[Math.floor(Math.random()*CARTAS.length)])); }
+function novaMao(){ return [randCarta(),randCarta(),randCarta()]; }
+function log(t){ let e=document.getElementById('log'); e.innerHTML="<div>"+t+"</div>"+e.innerHTML; }
 function atualizar(){
-  document.getElementById('vidaEu').textContent=vidaEu;
-  document.getElementById('vidaAdv').textContent=vidaAdv;
+  document.getElementById('vidaEu').textContent=Math.max(0,vidaEu);
+  document.getElementById('vidaAdv').textContent=Math.max(0,vidaAdv);
+  document.getElementById('energia').textContent=energia;
   document.getElementById('rodada').textContent=rodada;
-  document.getElementById('maoAdvInfo').textContent="🃏 Mão: "+maoAdvCount+(escudoAdv?" • 🛡️ Muralha":"");
-  document.getElementById('nomeEu').textContent="🫵 "+meuNome+(escudoEu?" • 🛡️":"");
-  document.getElementById('nomeAdv').textContent="👑 "+nomeAdv;
-  document.getElementById('turnoInfo').textContent = minhaVez ? "✅ SEU TURNO - Jogue!" : "⏳ Turno de "+nomeAdv+"...";
+  document.getElementById('barEu').style.width=(vidaEu/30*100)+"%";
+  document.getElementById('barAdv').style.width=(vidaAdv/30*100)+"%";
+  document.getElementById('barEnergia').style.width=(energia/10*100)+"%";
+  document.getElementById('nomeEu').textContent=meuNome;
+  document.getElementById('nomeAdv').textContent=nomeAdv;
+  document.getElementById('escEu').textContent=escEu? "🛡️ "+escEu:"";
+  document.getElementById('escAdv').textContent=escAdv? "🛡️ "+escAdv:"";
+  document.getElementById('venEu').textContent=venEuTurno? "🧪 Veneno "+venEuTurno+" turnos":"";
+  document.getElementById('venAdv').textContent=venAdvTurno? "🧪 Veneno "+venAdvTurno+" turnos":"";
+  document.getElementById('turnoInfo').textContent=minhaVez?"✅ SEU TURNO":"⏳ Turno do outro";
+  document.getElementById('maoAdvInfo').textContent="🃏 Mão: "+(online?3:"3");
   let m=document.getElementById('mao'); m.innerHTML="";
-  mao.forEach((c,i)=>{ let d=document.createElement('div'); d.className='carta'+(sel===i?' sel':''); d.innerHTML="<b>"+c.nome+"</b><br><small>"+c.desc+"</small>"; d.onclick=()=>{ sel=i; atualizar(); }; m.appendChild(d); });
+  mao.forEach((c,i)=>{
+    let d=document.createElement('div'); d.className='carta '+(c.rar==="Rara"?'rara':c.rar==="Lendária"?'lend':'')+(sel===i?' sel':'');
+    d.innerHTML=`<div class="custo">${c.c}⚡</div><div class="tipo">${c.t} • ${c.rar}</div><div class="nome">${c.n}</div><div class="desc">${c.d}</div><div class="rar">${c.c>energia?'⚠️ Sem energia':''}</div>`;
+    d.onclick=()=>{ sel=i; atualizar(); }; m.appendChild(d);
+  });
 }
-function comprar(){ if(mao.length<5) mao.push(CARTAS[Math.floor(Math.random()*CARTAS.length)]); }
-function jogarBot(){
-  online=false; meuNome=document.getElementById('inputNome').value||"Você"; nomeAdv="Bot 🤖";
-  vidaEu=20; vidaAdv=20; rodada=1; mao=novaMao(); minhaVez=true;
-  document.getElementById('menu').style.display='none'; document.getElementById('jogo').style.display='block';
-  log("Partida começou! Você começa."); atualizar();
-}
-function aplicarCarta(c, quem){
-  let atacante = quem==='eu' ? meuNome : nomeAdv;
-  if(c.tipo==='atk'){
-    let ignora = c.nome.includes("Raio");
-    if(quem==='eu'){
-      if(escudoAdv && !ignora){ escudoAdv=false; log("🛡️ Muralha de "+nomeAdv+" bloqueou!"); }
-      else { vidaAdv-=c.val; log(atacante+" usou "+c.nome+" -"+c.val+" vida!"); if(c.nome.includes("Fogo")){ vidaEu-=1; log("🔥 Você perdeu 1 por usar Fogo"); } }
-    } else {
-      if(escudoEu && !ignora){ escudoEu=false; log("🛡️ Sua Muralha bloqueou!"); }
-      else { vidaEu-=c.val; log(atacante+" usou "+c.nome+" -"+c.val+" vida!"); }
-    }
+function dano(alvo,valor,ignora){
+  if(alvo==='adv'){
+    if(escAdv>0 && !ignora){ let bloq=Math.min(escAdv,valor); escAdv-=bloq; valor-=bloq; log(`🛡️ Escudo de ${nomeAdv} bloqueou ${bloq}`); }
+    if(valor>0) vidaAdv-=valor;
+  } else {
+    if(escEu>0 && !ignora){ let bloq=Math.min(escEu,valor); escEu-=bloq; valor-=bloq; log(`🛡️ Seu escudo bloqueou ${bloq}`); }
+    if(valor>0) vidaEu-=valor;
   }
-  if(c.tipo==='def'){ if(quem==='eu') escudoEu=true; else escudoAdv=true; log(atacante+" levantou 🛡️ Muralha!"); }
-  if(c.tipo==='cura'){ if(quem==='eu'){ vidaEu=Math.min(20,vidaEu+c.val); log(atacante+" curou +"+c.val); } else { vidaAdv=Math.min(20,vidaAdv+c.val); log(atacante+" curou +"+c.val); } }
-  if(c.tipo==='espiao'){ log(atacante+" usou 🕵️ Espião e espiou a mão!"); }
-  checarFim();
 }
-function checarFim(){
-  if(vidaEu<=0){ log("💀 Você perdeu!"); alert("Você perdeu! "+nomeAdv+" venceu!"); minhaVez=false; }
-  if(vidaAdv<=0){ log("🏆 Você venceu!"); alert("VOCÊ VENCEU! 👑"); minhaVez=false; }
-  atualizar();
+function aplicar(c,quem){
+  let isEu=quem==='eu'; let nome=isEu?meuNome:nomeAdv;
+  log(`<b>${nome}</b> usou ${c.n}`);
+  if(c.tipo==='atk'){ dano(isEu?'adv':'eu',c.v,false); if(c.n.includes("Fogo")){ vidaEu-=2; log("🔥 Você perdeu 2 por usar Fogo"); } }
+  if(c.tipo==='atkIgnora') dano(isEu?'adv':'eu',c.v,true);
+  if(c.tipo==='duplo'){ dano(isEu?'adv':'eu',c.v,false); dano(isEu?'adv':'eu',c.v,false); }
+  if(c.tipo==='def'){ if(isEu) escEu+=c.v; else escAdv+=c.v; log(`🛡️ +${c.v} escudo`); }
+  if(c.tipo==='fort'){ if(isEu){escEu+=10; vidaEu=Math.min(30,vidaEu+2);} else {escAdv+=10; vidaAdv=Math.min(30,vidaAdv+2);} }
+  if(c.tipo==='cura'){ if(isEu) vidaEu=Math.min(30,vidaEu+c.v); else vidaAdv=Math.min(30,vidaAdv+c.v); log(`💚 +${c.v} vida`); }
+  if(c.tipo==='veneno'){ if(isEu){venAdvTurno=2; log(`🧪 ${nomeAdv} envenenado!`);} else {venEuTurno=2; log(`🧪 Você envenenado!`);} }
+  if(c.tipo==='roubo'){ if(isEu){vidaAdv-=c.v; vidaEu=Math.min(30,vidaEu+c.v);} else {vidaEu-=c.v; vidaAdv=Math.min(30,vidaAdv+c.v);} log(`🧛 Roubou ${c.v} vida!`); }
+  if(c.tipo==='rei'){ if(isEu){vidaAdv-=c.v; vidaEu=Math.min(30,vidaEu+c.v); escEu+=5;} else {vidaEu-=c.v; vidaAdv=Math.min(30,vidaAdv+c.v); escAdv+=5;} }
+  if(c.tipo==='meteoro'){ vidaEu-=c.v; vidaAdv-=c.v; log(`☄️ Meteoro atingiu todos!`); }
+  if(c.tipo==='mago'){ if(isEu){vidaEu=30; energia=Math.min(10,energia+3);} else {vidaAdv=30;} log(`🧙 Cura total!`); }
+  if(c.tipo==='espiao'){ if(isEu){mao.push(randCarta()); energia=Math.min(10,energia+1);} log(`🕵️ Roubou carta + energia`); }
+  if(c.tipo==='portal'){ if(isEu){mao=[randCarta(),randCarta()];} log(`🌀 Mão trocada!`); }
+  if(c.tipo==='espelho'){ log(`🪞 Espelho ativado (próximo ataque volta)`); }
+  checar();
+}
+function checar(){ atualizar(); if(vidaEu<=0){alert("💀 Você perdeu! "+nomeAdv+" venceu!"); minhaVez=false;} if(vidaAdv<=0){alert("🏆 VOCÊ VENCEU! 👑"); minhaVez=false;} }
+function aplicarVeneno(){
+  if(venEuTurno>0){ vidaEu-=2; venEuTurno--; log("🧪 Veneno tirou 2 de você"); }
+  if(venAdvTurno>0){ vidaAdv-=2; venAdvTurno--; log("🧪 Veneno tirou 2 de "+nomeAdv); }
 }
 function jogarCarta(){
-  if(!minhaVez){ alert("Não é seu turno!"); return; }
-  if(sel<0){ alert("Escolhe uma carta primeiro!"); return; }
-  let c=mao.splice(sel,1)[0]; sel=-1;
-  aplicarCarta(c,'eu'); comprar(); maoAdvCount=mao.length;
-  if(online && conn) conn.send({tipo:'jogada', carta:c, vidaEu:vidaEu, vidaAdv:vidaAdv, escudoEu:escudoEu, escudoAdv:escudoAdv});
-  minhaVez=false; rodada++; atualizar();
-  if(!online) setTimeout(turnoBot, 800);
+  if(!minhaVez){alert("Não é seu turno!");return;}
+  if(sel<0){alert("Escolha uma carta!");return;}
+  let c=mao[sel]; if(c.c>energia){alert("Sem energia! Passa o turno pra ganhar mais.");return;}
+  mao.splice(sel,1); sel=-1; energia-=c.c; aplicar(c,'eu');
+  if(mao.length<5) mao.push(randCarta());
+  if(online && conn) conn.send({tipo:'jogada',carta:c,vidaEu,vidaAdv,escEu,escAdv,venEuTurno,venAdvTurno,energia:energia});
+  minhaVez=false; aplicarVeneno(); rodada++; atualizar();
+  if(!online) setTimeout(turnoBot,900);
 }
 function passarTurno(){
-  if(!minhaVez) return; minhaVez=false; comprar(); atualizar();
-  if(online && conn) conn.send({tipo:'passou', vidaEu:vidaEu, vidaAdv:vidaAdv});
-  if(!online) setTimeout(turnoBot, 800);
+  if(!minhaVez) return; minhaVez=false; energia=Math.min(10,energia+2); if(mao.length<5) mao.push(randCarta()); aplicarVeneno(); rodada++; atualizar();
+  if(online && conn) conn.send({tipo:'passou',vidaEu,vidaAdv,escEu,escAdv,venEuTurno,venAdvTurno,energia:energia});
+  if(!online) setTimeout(turnoBot,900);
 }
 function turnoBot(){
   if(vidaEu<=0||vidaAdv<=0) return;
-  let c=CARTAS[Math.floor(Math.random()*CARTAS.length)];
-  // Bot burro: se vida baixa, cura, senão ataca
-  if(vidaAdv<8) c=CARTAS[3];
-  aplicarCarta(c,'bot');
-  comprar(); minhaVez=true; rodada++; log("Sua vez!"); atualizar();
+  energia=Math.min(10,energia+1);
+  let c=randCarta();
+  if(vidaAdv<10) c=CARTAS[10];
+  aplicar(c,'bot'); minhaVez=true; energia=Math.min(10,energia+1); log("Sua vez! +1 energia"); atualizar();
 }
-// ONLINE - Host manda tudo, guest só obedece
+function jogarBot(){
+  online=false; meuNome=document.getElementById('inputNome').value||"Você"; nomeAdv="Bot 🤖";
+  vidaEu=30; vidaAdv=30; energia=2; rodada=1; mao=novaMao(); minhaVez=true;
+  document.getElementById('menu').style.display='none'; document.getElementById('jogo').style.display='block';
+  log("Partida V2 começou! Você começa."); atualizar();
+}
 function criarSala(){
   meuNome=document.getElementById('inputNome').value||"Rei";
-  let codigo="TRONO-"+Math.floor(1000+Math.random()*9000);
-  document.getElementById('inputSala').value=codigo; souHost=true;
-  if(peer) peer.destroy(); peer=new Peer(codigo);
-  peer.on('open',()=>{ setStatus("Sala: "+codigo+" - esperando...", "orange"); document.getElementById('btnComecar').style.display='block'; });
-  peer.on('connection',c=>{ conn=c; setupConn(); });
-  peer.on('error',e=>alert("Erro: "+e.type));
+  let cod="TRONO-"+Math.floor(1000+Math.random()*9000);
+  document.getElementById('inputSala').value=cod; souHost=true;
+  if(peer) peer.destroy(); peer=new Peer(cod);
+  peer.on('open',()=>{ setStatus("Sala "+cod+" - esperando..."); document.getElementById('btnComecar').style.display='block'; });
+  peer.on('connection',c=>{conn=c; setupConn();});
 }
 function entrarSala(){
   meuNome=document.getElementById('inputNome').value||"Rainha";
-  let codigo=document.getElementById('inputSala').value.trim(); if(!codigo){alert("Digita o código!");return;}
+  let cod=document.getElementById('inputSala').value.trim(); if(!cod){alert("Digita o código!");return;}
   souHost=false; if(peer) peer.destroy(); peer=new Peer();
-  peer.on('open',()=>{ conn=peer.connect(codigo,{reliable:true}); setupConn(); setStatus("Conectando...","orange"); });
+  peer.on('open',()=>{ conn=peer.connect(cod,{reliable:true}); setupConn(); setStatus("Conectando..."); });
 }
 function setupConn(){
-  conn.on('open',()=>{
-    online=true; setStatus("✅ Conectado!","green");
-    conn.send({tipo:'ola', nome:meuNome});
-  });
+  conn.on('open',()=>{ online=true; setStatus("✅ Conectado!"); conn.send({tipo:'ola',nome:meuNome}); });
   conn.on('data',d=>{
-    if(d.tipo==='ola'){ nomeAdv=d.nome; log("Conectado com "+d.nome); }
-    if(d.tipo==='inicio'){
-      // Guest NÃO cria jogo, recebe do Host
-      online=true; souJogador1=false; nomeAdv=d.hostNome;
-      vidaEu=d.vidaGuest; vidaAdv=d.vidaHost; mao=d.maoGuest; maoAdvCount=d.maoHostCount; minhaVez=false;
-      document.getElementById('menu').style.display='none'; document.getElementById('jogo').style.display='block';
-      log("Partida começou! "+d.hostNome+" começa. Aguarde..."); atualizar();
-    }
-    if(d.tipo==='jogada'){
-      // O outro jogou, aplica no seu jogo
-      aplicarCarta(d.carta,'bot');
-      vidaEu=d.vidaAdv; vidaAdv=d.vidaEu; // inverte porque a visão é espelhada
-      escudoEu=d.escudoAdv; escudoAdv=d.escudoEu;
-      maoAdvCount=3; minhaVez=true; rodada++;
-      log("Sua vez!"); atualizar();
-    }
+    if(d.tipo==='ola'){ nomeAdv=d.nome; }
+    if(d.tipo==='inicio'){ online=true; nomeAdv=d.hostNome; vidaEu=d.vidaGuest; vidaAdv=d.vidaHost; mao=d.maoGuest; minhaVez=false; document.getElementById('menu').style.display='none'; document.getElementById('jogo').style.display='block'; log("Começou! "+d.hostNome+" começa."); atualizar(); }
+    if(d.tipo==='jogada'){ aplicar(d.carta,'bot'); vidaEu=d.vidaAdv; vidaAdv=d.vidaEu; escEu=d.escAdv; escAdv=d.escEu; venEuTurno=d.venAdvTurno; venAdvTurno=d.venEuTurno; minhaVez=true; rodada++; log("Sua vez!"); atualizar(); }
     if(d.tipo==='passou'){ minhaVez=true; log(nomeAdv+" passou. Sua vez!"); atualizar(); }
   });
 }
 function comecarOnline(){
-  if(!online && !conn){ alert("Espera o outro conectar!"); return; }
-  if(!souHost){ alert("Só quem criou começa!"); return; }
-  vidaEu=20; vidaAdv=20; rodada=1; mao=novaMao(); let maoGuest=novaMao();
-  minhaVez=true; souJogador1=true;
+  if(!conn){alert("Espera o outro conectar!");return;}
+  vidaEu=30; vidaAdv=30; energia=2; rodada=1; mao=novaMao(); let maoG=novaMao(); minhaVez=true;
   document.getElementById('menu').style.display='none'; document.getElementById('jogo').style.display='block';
   log("Você começa!"); atualizar();
-  conn.send({tipo:'inicio', hostNome:meuNome, vidaHost:20, vidaGuest:20, maoGuest:maoGuest, maoHostCount:3});
+  conn.send({tipo:'inicio',hostNome:meuNome,vidaHost:30,vidaGuest:30,maoGuest:maoG});
 }
-function setStatus(t,c){ let e=document.getElementById('onlineStatus'); e.textContent=t; e.style.color=c; }
+function setStatus(t){ document.getElementById('onlineStatus').textContent=t; }
 </script>
 </body>
 </html>
